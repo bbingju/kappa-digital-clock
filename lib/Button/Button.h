@@ -9,20 +9,20 @@
 #endif
   
 class Button {
- public:
-	Button(int p) { pin = p; };
-	~Button() {};
+public:
+    Button(int p) { pin = p; };
+    ~Button() {};
 
-	int pin;
-	boolean isPushed();
-	boolean isPushing();
+    int pin;
+    boolean isPushed();
+    boolean isPushing();
 
- private:
-	const long debounce_delay = 50;
-	int reading;
-	int last_state = HIGH;
-	int state = HIGH;
-	uint32_t last_debounce_time;
+private:
+    const long debounce_delay = 50;
+    int reading;
+    int last_state = HIGH;
+    int state = HIGH;
+    uint32_t last_debounce_time;
 };
 
 #endif /* BUTTON_H */
