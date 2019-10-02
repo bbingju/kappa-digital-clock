@@ -7,13 +7,9 @@ PROJECT_DIR = $(PWD)
 # ARDUINO_PORT = /dev/ttyUSB0
 
 # on the Mac
-#ARDUINO_DIR = $(HOME)/Library/Arduino15/packages/arduino/hardware/avr/1.8.1
 ARDUINO_DIR = $(HOME)/work/MegaCore/avr
-#ARDUINO_CORE_PATH = $(HOME)/Library/Arduino15/packages/arduino/hardware/avr/1.8.1
-#ALTERNATE_CORE_PATH = $(HOME)/Library/Arduino15/packages/arduino/hardware/avr/1.8.1
 ALTERNATE_CORE_PATH = $(HOME)/work/MegaCore/avr
 ARDMK_DIR   = /usr/local/opt/arduino-mk
-#AVR_TOOLS_DIR = $(HOME)/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino5
 AVR_TOOLS_DIR = /usr/local
 AVRDUDE_CONF  = $(ARDUINO_DIR)/avrdude.conf
 ARDUINO_PORT = /dev/tty.SLAB_USBtoUART
