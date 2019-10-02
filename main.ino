@@ -11,6 +11,19 @@
 // https://github.com/MCUdude/MegaCore
 //
 
+enum COM_POSITION {
+    COM_POSITION_HOUR        = 0,
+    COM_POSITION_MINUTE      = 1,
+    COM_POSITION_SECOND      = 2,
+    COM_POSITION_YEAR_H      = 3,
+    COM_POSITION_YEAR_L      = 4,
+    COM_POSITION_MONTH       = 5,
+    COM_POSITION_DAY         = 6,
+    COM_POSITION_TEMPERATURE = 7,
+    COM_POSITION_LUNAR_MONTH = 8,
+    COM_POSITION_LUNAR_DAY   = 9,
+};
+
 typedef struct
 {
     volatile uint8_t* port;
@@ -226,7 +239,16 @@ static Button btn_select(50);
 static Button btn_up(51);
 static Button btn_down(52);
 
-uint8_t setting_time_com_number = 0;
+static uint8_t setting_com_sequence[] = {
+    COM_POSITION_YEAR_L,
+    COM_POSITION_MONTH,
+    COM_POSITION_DAY,
+    COM_POSITION_HOUR,
+    COM_POSITION_MINUTE,
+    0xFF
+};
+static uint8_t *current_setting_com = &setting_com_sequence[0];
+#define SETTING_COM_POSITION_INIT()   (current_setting_com = &setting_com_sequence[0])
 
 time_t makeTime(int year, int month, int day, int hour, int minute, int second)
 {
@@ -489,8 +511,8 @@ ISR(TIMER1_COMPA_vect){         //timer0 interrupt
         LED_COM_ON(cn_1);
 
         if (cn_2 == 0) {
-            if (cn_1 == 0)       digits = (setting_time_com_number == 0) ? (blink_flag ? &current.hour : nullptr) : &current.hour;
-            else if (cn_1 == 1)  digits = (setting_time_com_number == 1) ? (blink_flag ? &current.min : nullptr) : &current.min;
+            if (cn_1 == 0)       digits = (*current_setting_com == 0) ? (blink_flag ? &current.hour : nullptr) : &current.hour;
+            else if (cn_1 == 1)  digits = (*current_setting_com == 1) ? (blink_flag ? &current.min : nullptr) : &current.min;
             else if (cn_1 == 2) goto HANDLE_COM11_SEGS;
             else digits = nullptr;
         }
@@ -649,7 +671,7 @@ void loop()
 
             /* Handle Select Button */
             if (btn_select.isPushed()) {
-                setting_time_com_number = 0;
+                SETTING_COM_POSITION_INIT();
                 current.sec = 0;
                 blink_flag = false;
                 timer_for_no_resp = millis();
@@ -683,7 +705,7 @@ void loop()
 
             /* Handle Select Button */
             if (btn_select.isPushed()) {
-                setting_time_com_number = 0;
+                SETTING_COM_POSITION_INIT();
                 current.sec = 0;
                 blink_flag = false;
                 timer_for_no_resp = millis();
@@ -781,7 +803,7 @@ void loop()
         while (1) {
 
             if (millis() - timer_for_no_resp > 1000 * 60) {
-                setting_time_com_number = 0;
+                SETTING_COM_POSITION_INIT();
                 rtc.setDateTime(&current);
                 time_synced_between_gps_n_rtc = false;
                 state = NORMAL_STATE;
@@ -803,8 +825,8 @@ void loop()
             }
 
             if (btn_select.isPushed()) {
-                if (setting_time_com_number == 6) {
-                    setting_time_com_number = 0;
+                if (*(++current_setting_com) == 0xFF) {
+                    SETTING_COM_POSITION_INIT();
                     /* getLunarDate(getTotalDaySolar(current.year, current.mon, current.day), lunardays); */
                     printCurrentDateTime();
                     rtc.stop();
@@ -816,48 +838,47 @@ void loop()
                     state = NORMAL_STATE;
                     Serial.println("state: TIMESETTING ==> NORMAL ");
                 }
-                else {
-                    if (setting_time_com_number == 1)
-                        setting_time_com_number += 3;
-                    else
-                        setting_time_com_number++;
-                }
                 break;
             }
 
             if (btn_up.isPushed()) {
-                if (setting_time_com_number == 0) { /* hour */
+                uint8_t com = *current_setting_com;
+                bool need_saved = false;
+                if (com == COM_POSITION_HOUR) {
                     if (current.hour == 24)
                         current.hour = 1;
                     else
                         current.hour++;
                 }
-                else if (setting_time_com_number == 1) { /* minute */
+                else if (com == COM_POSITION_MINUTE) {
                     if (current.min == 59)
                         current.min = 0;
                     else
                         current.min++;
                 }
-                else if (setting_time_com_number == 4) { /* year */
+                else if (com == COM_POSITION_YEAR_L) {
                     if (current.year >= 50)
                         current.year = 0;
                     else
                         current.year++;
+                    need_saved = true;
                 }
-                else if (setting_time_com_number == 5) { /* month */
+                else if (com == COM_POSITION_MONTH) {
                     if (current.mon == 12)
                         current.mon = 1;
                     else
                         current.mon++;
+                    need_saved = true;
                 }
-                else if (setting_time_com_number == 6) { /* day */
+                else if (com == COM_POSITION_DAY) {
                     if (current.day >= getLastDayOfMonth(current.year, current.mon))
                         current.day = 1;
                     else
                         current.day++;
+                    need_saved = true;
                 }
 
-                if (setting_time_com_number >= 4 &&  setting_time_com_number <= 6) {
+                if (need_saved) {
                     current.wday = getDayOfWeek(current.year, current.mon, current.day);
                     Serial.println(current.wday);
                     getLunarDate(getTotalDaySolar(current.year, current.mon, current.day), lunardays);
@@ -866,37 +887,42 @@ void loop()
             }
 
             if (btn_down.isPushed()) {
-                if (setting_time_com_number == 0) { /* hour */
+                uint8_t com = *current_setting_com;
+                bool need_saved = false;
+                if (com == COM_POSITION_HOUR) {
                     if (current.hour == 1)
                         current.hour = 24;
                     else
                         current.hour--;
                 }
-                else if (setting_time_com_number == 1) { /* minute */
+                else if (com == COM_POSITION_MINUTE) {
                     if (current.min == 0)
                         current.min = 59;
                     else
                         current.min--;
                 }
-                else if (setting_time_com_number == 4) { /* year */
+                else if (com == COM_POSITION_YEAR_L) {
                     if (current.year == 0)
                         current.year = 50;
                     else
                         current.year--;
+                    need_saved = true;
                 }
-                else if (setting_time_com_number == 5) { /* month */
+                else if (com == COM_POSITION_MONTH) {
                     if (current.mon == 1 || current.mon == 0)
                         current.mon = 12;
                     else
                         current.mon--;
+                    need_saved = true;
                 }
-                else if (setting_time_com_number == 6) { /* day */
+                else if (com == COM_POSITION_DAY) {
                     if (current.day == 1 || current.day == 0)
                         current.day = getLastDayOfMonth(current.year, current.mon == 0 ? 1 : current.mon);
                     else
                         current.day--;
+                    need_saved = true;
                 }
-                if (setting_time_com_number >= 4 &&  setting_time_com_number <= 6) {
+                if (need_saved) {
                     current.wday = getDayOfWeek(current.year, current.mon, current.day);
                     Serial.println(current.wday);
                     getLunarDate(getTotalDaySolar(current.year, current.mon, current.day), lunardays);
@@ -913,12 +939,13 @@ void loop()
                 matrix.setNumber(3, current.mon);
                 matrix.setNumber(4, current.day);
             } else {
-                if (setting_time_com_number == 4) {
+                int com = *current_setting_com;
+                if (com == COM_POSITION_YEAR_L) {
                     matrix.setTurnOff(1);
                     matrix.setTurnOff(2);
-                } else if (setting_time_com_number == 5) {
+                } else if (com == COM_POSITION_MONTH) {
                     matrix.setTurnOff(3);
-                } else if (setting_time_com_number == 6) {
+                } else if (com == COM_POSITION_DAY) {
                     matrix.setTurnOff(4);
                 }
             }
