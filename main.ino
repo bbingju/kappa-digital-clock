@@ -362,11 +362,6 @@ void setup()
     //setPwmFrequency(15, 1024);
     digitalWrite(15, HIGH);		// 일단 밝기 조절은 넘어가고... 그냥 항상 ON 시켜놓음
 
-    pinMode(btn_reset.pin, INPUT_PULLUP);
-    pinMode(btn_select.pin, INPUT_PULLUP);
-    pinMode(btn_up.pin, INPUT_PULLUP);
-    pinMode(btn_down.pin, INPUT_PULLUP);
-
     // OFF All COMs
     LED_COM_ALL_OFF();
 

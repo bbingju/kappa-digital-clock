@@ -10,15 +10,18 @@
   
 class Button {
 public:
-    Button(int p) { pin = p; };
+    Button(int pin) {
+        _pin = pin;
+        pinMode(_pin, INPUT_PULLUP);
+    };
     ~Button() {};
 
-    int pin;
     boolean isPushed();
     boolean isPushing();
 
 private:
-    const long debounce_delay = 50;
+    int _pin;
+    const uint32_t debounce_delay = 50;
     int reading;
     int last_state = HIGH;
     int state = HIGH;

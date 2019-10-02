@@ -1,9 +1,8 @@
-#include <Wire.h>
 #include "Button.h"
 
 boolean Button::isPushed()
 {
-    reading = digitalRead(pin);
+    reading = digitalRead(_pin);
 
     if (reading != last_state) {
         last_debounce_time = millis();
@@ -25,5 +24,5 @@ boolean Button::isPushed()
 
 boolean Button::isPushing()
 {
-    return !digitalRead(pin);
+    return !digitalRead(_pin);
 }
