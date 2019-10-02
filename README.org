@@ -1,2 +1,6 @@
 #+TITLE: Kappa Digital Clock
 
+* Hardware
+** HT16K33 - RAM Mapping 16*8 LED Controller Driver
+   - [[https://cdn-shop.adafruit.com/datasheets/ht16K33v110.pdf][datasheet]]
+   - [[https://github.com/jonpearse/ht16k33-arduino][Arduino driver]]
