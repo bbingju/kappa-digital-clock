@@ -32,68 +32,68 @@ typedef enum {
 } State;
 
 const uint8_t COMS_ARDUINO[] = {
-    32,														/* COM1 */
-    33,														/* COM2 */
-    36														/* COM11 */
+    32,													/* COM1 */
+    33,                         /* COM2 */
+    36                          /* COM11 */
 };
 
 const uint8_t COMS_DECIMAL_PLACES[] = {
-    0,														// COM1
-    1,														// COM2
+    0,                          // COM1
+    1,                          // COM2
 };
 
 const uint8_t COMS_BRIGHTNESS[3][2] = {
     // low (0)
     {
-        8,												// COM1
-        8,												// COM2
+        8,                      // COM1
+        8,                      // COM2
     },
     // medium (1)
     {
-        60,												// COM1
-        60,												// COM2
+        60,                     // COM1
+        60,                     // COM2
     },
     // high (2)
     {
-        180,											// COM1
-        180,											// COM2
+        180,                    // COM1
+        180,                    // COM2
     },
 };
 
 const uint8_t SEGS_ARDUINO[] = {
-    44,		// SEG1
-    43,		// SEG2
-    42,		// SEG3
-    41,		// SEG4
-    40,		// SEG5
-    39,		// SEG6
-    38,		// SEG7
-    37,		// SEG8
+    44,                         // SEG1
+    43,                         // SEG2
+    42,                         // SEG3
+    41,                         // SEG4
+    40,                         // SEG5
+    39,                         // SEG6
+    38,                         // SEG7
+    37,                         // SEG8
 
-    8,		// SEG9
-    12,		// SEG10
-    13,		// SEG11
-    14,		// SEG12
-    28,		// SEG13
-    29,		// SEG14
-    30,		// SEG15
-    31		// SEG16
+    8,                          // SEG9
+    12,                         // SEG10
+    13,                         // SEG11
+    14,                         // SEG12
+    28,                         // SEG13
+    29,                         // SEG14
+    30,                         // SEG15
+    31                          // SEG16
 };
 
 
 const uint8_t NUM_TO_SEG[] = {
     //76543210
-    0b01110111,			// 0
-    0b00010010,			// 1
-    0b01101011,			// 2
-    0b01011011,			// 3
-    0b00011110,			// 4
-    0b01011101,			// 5
-    0b01111101,			// 6
-    0b00010111,			// 7
-    0b01111111,			// 8
-    0b01011111,			// 9
-    0b00000000,         // NULL
+    0b01110111,                 // 0
+    0b00010010,                 // 1
+    0b01101011,                 // 2
+    0b01011011,                 // 3
+    0b00011110,                 // 4
+    0b01011101,                 // 5
+    0b01111101,                 // 6
+    0b00010111,                 // 7
+    0b01111111,                 // 8
+    0b01011111,                 // 9
+    0b00000000,                 // NULL
 };
 
 void LED_COM_ON(uint8_t com_number)
@@ -499,16 +499,7 @@ ISR(TIMER1_COMPA_vect){         //timer0 interrupt
 
         LED_COM_ALL_OFF();
         LED_COM_ON(cn_1);
-
-        /* if (state == TIMESYNC_STATE) { */
-        /*     if (cn_1 == 2) */
-        /*         goto HANDLE_COM11_SEGS; */
-        /*     else */
-        /*         LED_SET_NULL(); */
-        /* } */
-        /* else { */
-            LED_SET_NULL();
-        /* } */
+        LED_SET_NULL();
 
         if (++cn > 6)
             cn = 0;
@@ -652,7 +643,6 @@ void loop()
 {
     if (state == STARTED_STATE) {
         VariableTimedAction::updateActions();
-        /* state = TIMESYNC_STATE; */
         state = NORMAL_STATE;
         gps.start(500, false);
         Serial.println("state: STARTED ==> NORMAL");
