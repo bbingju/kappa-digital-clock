@@ -1,6 +1,33 @@
 #+TITLE: Kappa Digital Clock
 
 * Hardware
-** HT16K33 - RAM Mapping 16*8 LED Controller Driver
+
+** MCU - ATmega64A
+   - [[http://ww1.microchip.com/downloads/en/DeviceDoc/atmel-8160-8-bit-avr-microcontroller-atmega64a-datasheet.pdf][datasheet]]
+
+** RTC - [[https://www.nxp.com/products/peripherals-and-logic/signal-chain/real-time-clocks/rtcs-with-temperature-compensation/accurate-rtc-with-integrated-quartz-crystal-for-industrial-applications:PCF2129][PCF2129]]
+   - [[https://www.nxp.com/docs/en/data-sheet/PCF2129.pdf][datasheet]]
+
+** RAM Mapping 16*8 LED Controller Driver - HT16K33
    - [[https://cdn-shop.adafruit.com/datasheets/ht16K33v110.pdf][datasheet]]
    - [[https://github.com/jonpearse/ht16k33-arduino][Arduino driver]]
+
+** GPS
+
+
+* Software
+
+** Arduino Core
+*** [[https://github.com/MCUdude/MegaCore][MCUdude/MegaCore]]
+
+** Arduino Libraries
+*** [[https://github.com/amirchev/VariableTimedAction][amirchev/VariableTimedAction]]
+*** [[https://github.com/adafruit/Adafruit_GPS][adafruit/Adafruit_GPS]]
+
+
+* See Also
+
+** GPS
+   - [[https://www.sparkfun.com/datasheets/GPS/Modules/PMTK_Protocol.pdf][MTK NMEA Packet User Manual]]
+   - [[http://aprs.gids.nl/nmea/][GPS - NMEA sentence information]]
+   - [[https://cdn-learn.adafruit.com/downloads/pdf/adafruit-ultimate-gps.pdf][Adafruit Ultimate GPS]]

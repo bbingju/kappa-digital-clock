@@ -3,12 +3,6 @@
 #ifndef _LUNAR_CAL_h
 #define _LUNAR_CAL_h
 
-/* #if defined(ARDUINO) && ARDUINO >= 100 */
-/* 	#include "arduino.h" */
-/* #else */
-/* 	#include "WProgram.h" */
-/* #endif */
-
 #include <stdint.h>
 
 #ifdef __cplusplus

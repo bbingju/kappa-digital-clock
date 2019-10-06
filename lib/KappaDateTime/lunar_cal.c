@@ -94,30 +94,30 @@ void getLunarDate(int totalDay, uint8_t* result) {    // result[0]~[2] 에 넣�
 
 int isLeapYear(int year)
 {
-  if (year % 400 == 0)
-    return 1;
-  else if (year % 100 == 0)
-    return 0;
-  else if (year % 4 == 0)
-    return 1;
-  else
-    return 0;
+	if (year % 400 == 0)
+		return 1;
+	else if (year % 100 == 0)
+		return 0;
+	else if (year % 4 == 0)
+		return 1;
+	else
+		return 0;
 }
 
 uint8_t getLastDayOfMonth(uint8_t y, uint8_t m)
 {
-  if (m < 1 || m > 12)
-    return 30;
+	if (m < 1 || m > 12)
+		return 30;
 
-  int year = 2000 + y;
-  uint8_t days = solarDayNum[m - 1];
-  if (isLeapYear(year) && m == 2)
-    days++;
-  return days;
+	int year = 2000 + y;
+	uint8_t days = solarDayNum[m - 1];
+	if (isLeapYear(year) && m == 2)
+		days++;
+	return days;
 }
 
 uint8_t getDayOfWeek(uint8_t y, uint8_t m, uint8_t d)
 {
-  int year = y + 2000;
-  return (d += m < 3 ? year-- : year - 2, 23*m/9 + d + 4 + year/4- year/100 + year/400)%7;
+	int year = y + 2000;
+	return (d += m < 3 ? year-- : year - 2, 23*m/9 + d + 4 + year/4- year/100 + year/400)%7;
 }
