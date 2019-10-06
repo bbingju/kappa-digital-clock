@@ -1,29 +1,11 @@
-#include <Wire.h>
 #include "Button.h"
 
-boolean Button::isPushed()
+void Button::registerCallback(void (*callback)(void *, Button::EVENT))
 {
-    reading = digitalRead(pin);
-
-    if (reading != last_state) {
-        last_debounce_time = millis();
-    }
-
-    if (millis() - last_debounce_time > debounce_delay) {
-
-        if (reading != state) {
-            state = reading;
-
-            if (state == LOW) {
-                return true;
-            }
-        }
-    }
-    last_state = reading;
-    return false;
+    _event_callback = callback;
 }
 
 boolean Button::isPushing()
 {
-    return !digitalRead(pin);
+    return !digitalRead(_pin);
 }

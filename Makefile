@@ -23,12 +23,17 @@ F_CPU = 8000000L
 USER_LIB_PATH += $(PROJECT_DIR)/lib
 ARDUINO_LIBS  += Wire \
 	SoftwareSerial \
-	Adafruit_GPS_Library \
+	VariableTimedAction \
+	Adafruit_GPS \
 	Rtc \
-	lunar_cal \
 	HT16K33 \
+	KappaGPS \
+	KappaDateTime \
 	KappaSegment \
-	Button
+	CDS \
+	DHT \
+	Button \
+	NoInteraction
 
 CURRENT_DIR       = $(shell basename $(CURDIR))
 OBJDIR  = $(PROJECT_DIR)/bin/$(BOARD_TAG)/$(CURRENT_DIR)
