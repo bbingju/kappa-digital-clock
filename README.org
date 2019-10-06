@@ -25,9 +25,10 @@
 *** [[https://github.com/adafruit/Adafruit_GPS][adafruit/Adafruit_GPS]]
 
 
+
 * See Also
 
-** GPS
-   - [[https://www.sparkfun.com/datasheets/GPS/Modules/PMTK_Protocol.pdf][MTK NMEA Packet User Manual]]
-   - [[http://aprs.gids.nl/nmea/][GPS - NMEA sentence information]]
-   - [[https://cdn-learn.adafruit.com/downloads/pdf/adafruit-ultimate-gps.pdf][Adafruit Ultimate GPS]]
+  - [[https://www.sparkfun.com/datasheets/GPS/Modules/PMTK_Protocol.pdf][MTK NMEA Packet User Manual]]
+  - [[http://aprs.gids.nl/nmea/][GPS - NMEA sentence information]]
+  - [[https://cdn-learn.adafruit.com/downloads/pdf/adafruit-ultimate-gps.pdf][Adafruit Ultimate GPS]]
+  - [[https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&ie=utf8&query=%25EB%2584%25A4%25EC%259D%25B4%25EB%25B2%2584+%25EC%258B%259C%25EA%25B3%2584][네이버 시계]]

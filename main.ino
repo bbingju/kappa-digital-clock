@@ -32,7 +32,7 @@ typedef enum {
 } State;
 
 const uint8_t COMS_ARDUINO[] = {
-    32,													/* COM1 */
+    32,                         /* COM1 */
     33,                         /* COM2 */
     36                          /* COM11 */
 };
@@ -222,6 +222,7 @@ static uint8_t *current_setting_com = &setting_com_sequence[0];
 void reset()
 {
     matrix.turnOffAll();
+    delay(200);
     asm volatile ("  jmp 0");
 }
 
@@ -288,7 +289,6 @@ static void onButtonSelect(void *arg, Button::EVENT e)
 
         if (e == Button::UP) {
             SETTING_COM_POSITION_INIT();
-            /* current.sec = 0; */
             blink_flag = false;
             gps.stop();
             datetime.changeToSettingMode();
@@ -304,7 +304,7 @@ static void onButtonSelect(void *arg, Button::EVENT e)
             if (*(++current_setting_com) == 0xFF) {
                 SETTING_COM_POSITION_INIT();
                 datetime.saveSettingTime();
-                gps.start(500, false);
+                gps.start();
                 datetime.changeToNormalMode();
                 nointeraction.stop();
                 state = NORMAL_STATE;
@@ -413,6 +413,8 @@ static void onNotifyGPS(void *arg, bool ret)
 
 void setup()
 {
+    gps.init(onNotifyGPS);
+
     matrix.setup();
 
     // SETUP GPIO
@@ -478,8 +480,6 @@ void setup()
     btn_down.start(30, false);
 
     nointeraction.registerCallback(onNoInteraction);
-
-    gps.init(onNotifyGPS);
 
     Serial.begin(115200);
     Serial.println("Setup Done.");
@@ -644,7 +644,7 @@ void loop()
     if (state == STARTED_STATE) {
         VariableTimedAction::updateActions();
         state = NORMAL_STATE;
-        gps.start(500, false);
+        gps.start();
         Serial.println("state: STARTED ==> NORMAL");
     }
     else if (state == FACTORYTEST_STATE) {

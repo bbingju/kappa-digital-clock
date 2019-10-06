@@ -14,7 +14,7 @@
 
 class KappaGPS: public VariableTimedAction {
 public:
-    KappaGPS(): _gps(&GPSSerial) {}
+    KappaGPS(): _gps(&GPSSerial), _interval(200) {}
     ~KappaGPS() {}
 
     void init(void (*callback)(void *, bool)) {
@@ -23,18 +23,27 @@ public:
 
         _gps.begin(9600);
         //These lines configure the GPS Module
-        //_gps.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);
-        _gps.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
+        _gps.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);
+        //_gps.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
         // _gps.sendCommand(PMTK_SET_NMEA_OUTPUT_ALLDATA);
         _gps.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
+        // _gps.sendCommand(PMTK_API_SET_FIX_CTL_100_MILLIHERTZ);
         _gps.sendCommand(PGCMD_NOANTENNA);
         // Request updates on antenna status, comment out to keep quiet
         //_gps.sendCommand(PGCMD_ANTENNA);
 
-        delay(1000);
+        //delay(1000);
 
         // Ask for firmware version
         _gps.sendCommand(PMTK_Q_RELEASE);
+    }
+
+    void setInterval(unsigned long interval) {
+        _interval = interval;
+    }
+
+    void start() {
+        VariableTimedAction::start(_interval, false);
     }
 
     Adafruit_GPS *getGPS() {
@@ -82,7 +91,7 @@ public:
 
 private:
     Adafruit_GPS _gps;
-    boolean gps_parsed = false;
+    unsigned long _interval;
 
     void (*_callback)(void *arg, bool ret) = 0;
 
