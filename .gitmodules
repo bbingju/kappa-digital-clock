@@ -4,3 +4,6 @@
 [submodule "lib/Adafruit_GPS"]
 	path = lib/Adafruit_GPS
 	url = https://github.com/adafruit/Adafruit_GPS.git
+[submodule "lib/HT16K33"]
+	path = lib/HT16K33
+	url = https://github.com/jonpearse/ht16k33-arduino.git
