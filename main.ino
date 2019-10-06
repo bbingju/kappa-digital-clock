@@ -25,6 +25,7 @@ typedef struct {
 } LED_COMSEG_T;
 
 typedef enum {
+    RESET_STATE,
     FACTORYTEST_STATE,
     STARTED_STATE,
     NORMAL_STATE,
@@ -221,8 +222,10 @@ static uint8_t *current_setting_com = &setting_com_sequence[0];
 // Restarts program from beginning but does not reset the peripherals and registers
 void reset()
 {
+    state = RESET_STATE;
     matrix.turnOffAll();
-    delay(200);
+
+    delay(500);
     asm volatile ("  jmp 0");
 }
 
@@ -493,7 +496,7 @@ void setup()
 
 ISR(TIMER1_COMPA_vect){         //timer0 interrupt
 
-    if (state == STARTED_STATE) {
+    if (state == STARTED_STATE || state == RESET_STATE) {
         cn_1 = cn / 2;
         cn_2 = cn % 2;
 
