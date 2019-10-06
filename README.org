@@ -10,7 +10,6 @@
 
 ** RAM Mapping 16*8 LED Controller Driver - HT16K33
    - [[https://cdn-shop.adafruit.com/datasheets/ht16K33v110.pdf][datasheet]]
-   - [[https://github.com/jonpearse/ht16k33-arduino][Arduino driver]]
 
 ** GPS
 
@@ -22,6 +21,7 @@
 
 ** Arduino Libraries
 *** [[https://github.com/amirchev/VariableTimedAction][amirchev/VariableTimedAction]]
+*** [[https://github.com/jonpearse/ht16k33-arduino][jonpearse/ht16k33-arduino]]
 *** [[https://github.com/adafruit/Adafruit_GPS][adafruit/Adafruit_GPS]]
 
 
