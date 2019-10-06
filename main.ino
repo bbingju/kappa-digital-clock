@@ -1,4 +1,3 @@
-#include <time.h>
 #include "CDS.h"
 #include "DHT.h"
 #include "KappaGPS.h"
@@ -183,11 +182,6 @@ void LED_DISPLAY_VALUE(uint8_t decimal_val, uint8_t com_number)
 // PIN 18 = PD0 = I2C SCL
 // PIN 19 = PD1 = I2C SDA
 // PIN 20 = PD2 = GPS UART RX (9600bps)
-
-/* time_t utc; */
-/* time_t local_time; */
-
-/* boolean gps_parsed = false; */
 
 static KappaGPS gps;
 static KappaDateTime datetime;
