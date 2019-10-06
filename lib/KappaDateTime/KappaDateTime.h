@@ -282,6 +282,12 @@ private:
             Rtc::DateTime time = _rtc.dateTime();
             if (memcmp(&time, _current, sizeof(Rtc::DateTime))) {
                 *_current = time;
+                if (_current->mon == 0 && _current->day == 0) {
+                    _current->year = 10;
+                    _current->mon  = 1;
+                    _current->day  = 1;
+                    setCurrent(_current);
+                }
                 getLunarDate(getTotalDaySolar(_current->year, _current->mon, _current->day), _lunardate);
                 _notify(this);
             }
