@@ -14,7 +14,7 @@
 
 class KappaGPS: public VariableTimedAction {
 public:
-    KappaGPS(): _gps(&GPSSerial), _interval(200) {}
+    KappaGPS(): _gps(&GPSSerial), _interval(400) {}
     ~KappaGPS() {}
 
     void init(void (*callback)(void *, bool)) {
