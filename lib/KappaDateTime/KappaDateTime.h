@@ -195,7 +195,6 @@ public:
             // This is scenario.
             _setting_time_modified = true;
             _setting_time.sec = 0;
-            setCurrent(&_setting_time);
         }
     }
 
@@ -258,7 +257,6 @@ public:
             // This is scenario.
             _setting_time_modified = true;
             _setting_time.sec = 0;
-            setCurrent(&_setting_time);
         }
     }
 
