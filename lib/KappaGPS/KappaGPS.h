@@ -133,19 +133,6 @@ private:
                 }
                 printParsed();
             }
-
-            // char *s = _gps.lastNMEA();
-            // if (!_gps.parse(s)) {   // this also sets the newNMEAreceived() flag to false
-            //     if (_callback)
-            //         _callback(this, false);
-            //     Serial.print("parse error! ");
-            //     Serial.println(s);
-            // }
-            // else {
-            //     if (_callback)
-            //         _callback(this, true);
-            //     printParsed();
-            // }
         }
         return 0;
     }
