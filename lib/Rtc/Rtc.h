@@ -209,8 +209,8 @@ namespace EmbeddedDevices
       writeRegister(REG::MINUTES, decToBcd(dt.min) & 0x7F);
       writeRegister(REG::SECONDS, decToBcd(dt.sec) & 0x7F);
 
-      Serial.print("setDateTime - ");
-      printDateTime();
+      // Serial.print("setDateTime - ");
+      // printDateTime();
 
       return 0;
     }

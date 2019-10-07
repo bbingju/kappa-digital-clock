@@ -34,7 +34,6 @@ public:
     }
 
     void saveSettingTime() {
-        // _real_time = _setting_time;
         if (_setting_time_modified)
             setCurrent(&_setting_time);
     }
@@ -62,10 +61,8 @@ public:
         int d = obj->day;
         int mon = obj->month;
         int y = obj->year;
-        bool date_received = true;
 
         if (d == 0 && mon == 0 && y == 0) {
-            date_received = false;
             y   = _real_time.year;
             mon = _real_time.mon;
             d   = _real_time.day;
@@ -143,25 +140,20 @@ public:
     void increaseYear() {
         if (isSettingMode()) {
             uint8_t y = _setting_time.year;
-            y = (y >= 50) ? 0 : y + 1;
-            _setting_time.year = y;
-            _setting_time.wday = getDayOfWeek(_setting_time.year, _setting_time.mon, _setting_time.day);
-            setCurrent(&_setting_time);
-            getLunarDate(getTotalDaySolar(_setting_time.year, _setting_time.mon, _setting_time.day), _lunardate);
+            _setting_time.year = y = (y >= 50) ? 0 : y + 1;
+            _setting_time.wday = getDayOfWeek(y, _setting_time.mon, _setting_time.day);
+            getLunarDate(getTotalDaySolar(y, _setting_time.mon, _setting_time.day), _lunardate);
         }
     }
 
     void increaseMonth() {
         if (isSettingMode()) {
             uint8_t m = _setting_time.mon;
-            m = (m >= 12) ? 1 : m + 1;
-            _setting_time.mon = m;
-
+            _setting_time.mon = m = (m >= 12) ? 1 : m + 1;
             uint8_t d = getLastDayOfMonth(_setting_time.year, m);
             if (_setting_time.day > d)
                 _setting_time.day = d;
             _setting_time.wday = getDayOfWeek(_setting_time.year, m, _setting_time.day);
-            setCurrent(&_setting_time);
             getLunarDate(getTotalDaySolar(_setting_time.year, m, _setting_time.day), _lunardate);
         }
     }
@@ -169,10 +161,8 @@ public:
     void increaseDay() {
         if (isSettingMode()) {
             uint8_t d = _setting_time.day;
-            d = (d >= getLastDayOfMonth(_setting_time.year, _setting_time.mon)) ? 1 : d + 1;
-            _setting_time.day = d;
+            _setting_time.day = d = (d >= getLastDayOfMonth(_setting_time.year, _setting_time.mon)) ? 1 : d + 1;
             _setting_time.wday = getDayOfWeek(_setting_time.year, _setting_time.mon, d);
-            setCurrent(&_setting_time);
             getLunarDate(getTotalDaySolar(_setting_time.year, _setting_time.mon, d), _lunardate);
         }
     }
@@ -180,17 +170,14 @@ public:
     void increaseHour() {
         if (isSettingMode()) {
             uint8_t h = _setting_time.hour;
-            h = (h >= 23) ? 0 : h + 1;
-            _setting_time.hour = h;
-            setCurrent(&_setting_time);
+            _setting_time.hour = h = (h >= 23) ? 0 : h + 1;
         }
     }
 
     void increaseMinute() {
         if (isSettingMode()) {
             uint8_t m = _setting_time.min;
-            m = (m >=59) ? 0 : m + 1;
-            _setting_time.min = m;
+            _setting_time.min = m = (m >=59) ? 0 : m + 1;
 
             // This is scenario.
             _setting_time_modified = true;
@@ -201,59 +188,44 @@ public:
     void decreaseYear() {
         if (isSettingMode()) {
             uint8_t y = _setting_time.year;
-            y = (y == 0) ? 50 : y - 1;
-            _setting_time.year = y;
+            _setting_time.year = y = (y == 0) ? 50 : y - 1;
             _setting_time.wday = getDayOfWeek(y, _setting_time.mon, _setting_time.day);
-            setCurrent(&_setting_time);
             getLunarDate(getTotalDaySolar(y, _setting_time.mon, _setting_time.day), _lunardate);
         }
     }
 
     void decreaseMonth() {
         if (isSettingMode()) {
-            if (_setting_time.mon == 1)
-                _setting_time.mon = 12;
-            else
-                _setting_time.mon--;
-
-            uint8_t d = getLastDayOfMonth(_setting_time.year, _setting_time.mon);
+            uint8_t m = _setting_time.mon;
+            _setting_time.mon = m = (m == 1) ? 12 : m - 1;
+            uint8_t d = getLastDayOfMonth(_setting_time.year, m);
             if (_setting_time.day > d)
                 _setting_time.day = d;
-            _setting_time.wday = getDayOfWeek(_setting_time.year, _setting_time.mon, _setting_time.day);
-            setCurrent(&_setting_time);
-            getLunarDate(getTotalDaySolar(_setting_time.year, _setting_time.mon, _setting_time.day), _lunardate);
+            _setting_time.wday = getDayOfWeek(_setting_time.year, m, _setting_time.day);
+            getLunarDate(getTotalDaySolar(_setting_time.year, m, _setting_time.day), _lunardate);
         }
     }
 
     void decreaseDay() {
         if (isSettingMode()) {
-            if (_setting_time.day == 1)
-                _setting_time.day = getLastDayOfMonth(_setting_time.year, _setting_time.mon);
-            else
-                _setting_time.day--;
-            _setting_time.wday = getDayOfWeek(_setting_time.year, _setting_time.mon, _setting_time.day);
-            setCurrent(&_setting_time);
-            getLunarDate(getTotalDaySolar(_setting_time.year, _setting_time.mon, _setting_time.day), _lunardate);
+            uint8_t d = _setting_time.day;
+            _setting_time.day = d = (d == 1) ? getLastDayOfMonth(_setting_time.year, _setting_time.mon) : d - 1;
+            _setting_time.wday = getDayOfWeek(_setting_time.year, _setting_time.mon, d);
+            getLunarDate(getTotalDaySolar(_setting_time.year, _setting_time.mon, d), _lunardate);
         }
     }
 
     void decreaseHour() {
         if (isSettingMode()) {
-            if (_setting_time.hour == 0)
-                _setting_time.hour = 23;
-            else
-                _setting_time.hour--;
-            setCurrent(&_setting_time);
+            uint8_t h = _setting_time.hour;
+            _setting_time.hour = (h == 0) ? 23 : h - 1;
         }
     }
 
     void decreaseMinute() {
         if (isSettingMode()) {
-            if (_setting_time.min == 0)
-                _setting_time.min = 59;
-            else
-                _setting_time.min--;
-
+            uint8_t m = _setting_time.min;
+            _setting_time.min = (m == 0) ? 59 : m - 1;
             // This is scenario.
             _setting_time_modified = true;
             _setting_time.sec = 0;
@@ -295,10 +267,14 @@ private:
         else if (_mode == SETTING_MODE) {
             if (!_setting_time_modified) {
                 Rtc::DateTime time = _rtc.dateTime();
-                if (memcmp(&time, _current, sizeof(Rtc::DateTime))) {
-                    *_current = time;
-                    getLunarDate(getTotalDaySolar(_current->year, _current->mon, _current->day), _lunardate);
+                bool changed = false;
+                if (time.sec != _current->sec) {
+                    _current->sec = time.sec;
+                    changed = true;
                 }
+
+                if (changed)
+                    getLunarDate(getTotalDaySolar(_current->year, _current->mon, _current->day), _lunardate);
             }
             _notify(this);
         }
