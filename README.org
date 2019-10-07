@@ -1,5 +1,13 @@
 #+TITLE: Kappa Digital Clock
 
+* 요구사항
+
+  - GPS 모듈이 붙어 있을 경우, GPS와 시간을 동기화 해야한다.
+  - 주변 밝기에 따라 LED 밝기를 3단계로 자동 조절되어야 한다.
+  - 현재 온도가 표시 되어야 한다.
+  - 음력이 표시되어야 한다.
+
+
 * Hardware
 
 ** MCU - ATmega64A
@@ -23,7 +31,6 @@
 *** [[https://github.com/amirchev/VariableTimedAction][amirchev/VariableTimedAction]]
 *** [[https://github.com/jonpearse/ht16k33-arduino][jonpearse/ht16k33-arduino]]
 *** [[https://github.com/adafruit/Adafruit_GPS][adafruit/Adafruit_GPS]]
-
 
 
 * See Also
