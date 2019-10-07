@@ -296,12 +296,12 @@ static void onButtonSelect(void *arg, Button::EVENT e)
             gps.stop();
             datetime.changeToSettingMode();
             state = TIMESETTING_STATE;
-            nointeraction.restart();
+            nointeraction.reset();
             Serial.println("state: NORMAL ==> TIMESETTING");
         }
     }
     else if (state == TIMESETTING_STATE) {
-        nointeraction.restart();
+        nointeraction.reset();
 
         if (e == Button::UP) {
             if (*(++current_setting_com) == 0xFF) {
@@ -322,7 +322,7 @@ static void onButtonUp(void *arg, Button::EVENT e)
 {
     if (state == TIMESETTING_STATE) {
 
-        nointeraction.restart();
+        nointeraction.reset();
 
         uint8_t com = *current_setting_com;
 
@@ -358,7 +358,7 @@ static void onButtonDown(void *arg, Button::EVENT e)
 {
     if (state == TIMESETTING_STATE) {
 
-        nointeraction.restart();
+        nointeraction.reset();
 
         uint8_t com = *current_setting_com;
 

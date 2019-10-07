@@ -12,7 +12,7 @@
 class NoInteraction: public VariableTimedAction {
 
 public:
-    NoInteraction(): _interval(30 * 1000) {
+    NoInteraction(): _interval(10 * 1000) {
         _callback = 0;
     }
     ~NoInteraction() {}
@@ -21,7 +21,7 @@ public:
         _callback = callback;
     }
 
-    void restart() {
+    void reset() {
         if (isRunning()) {
             stop();
         }
@@ -30,13 +30,16 @@ public:
     }
 
 private:
+    const unsigned long count_max = 6;
     unsigned long _interval;
+    unsigned long _count = 0;
 
     void (*_callback)(void *);
 
     unsigned long run() {
 
-        if (_callback) {
+        if (_callback && (++_count >= count_max)) {
+            _count = 0;
             _callback(this);
         }
         return 0;
