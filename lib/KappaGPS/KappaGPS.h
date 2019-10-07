@@ -14,14 +14,20 @@
 
 class KappaGPS: public VariableTimedAction {
 public:
-    KappaGPS(): _gps(&GPSSerial), _interval(400) {}
+    KappaGPS(): _gps(&GPSSerial) {}
     ~KappaGPS() {}
+
+    enum MODE {
+        SHORT_TERM,
+        LONG_TERM
+    };
 
     void init(void (*callback)(void *, bool)) {
 
         _callback = callback;
 
         _gps.begin(9600);
+//        _gps.sendCommand(PMTK_SET_BAUD_9600);
         //These lines configure the GPS Module
         _gps.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);
         //_gps.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
@@ -91,16 +97,26 @@ public:
 
 private:
     Adafruit_GPS _gps;
-    unsigned long _interval;
+    unsigned long _interval = 200;
+    enum MODE _mode = SHORT_TERM;
+    uint32_t _count_for_mode = 0;
 
     void (*_callback)(void *arg, bool ret) = 0;
 
     unsigned long run() {
-        char c;
+
+        if (_mode == LONG_TERM) {
+            if ((++_count_for_mode) > 10 * 60 * 60) {
+                _mode = SHORT_TERM;
+                Serial.println("\nGPS: change to SHORT_TERM");
+            } else {
+                return 0;
+            }
+        }
 
         while (GPSSerial.available()) {
-            c = _gps.read();
-//            Serial.write(c);
+            _gps.read();
+            // Serial.write(_gps.read());
         }
 
         if (_gps.newNMEAreceived()) {
@@ -109,8 +125,14 @@ private:
             if (_callback)
                 _callback(this, ret);
 
-            if (ret)
+            if (ret) {
+                if (_mode == SHORT_TERM) {
+                    Serial.println("GPS: change to LONG_TERM");
+                    _mode = LONG_TERM;
+                    _count_for_mode = 0;
+                }
                 printParsed();
+            }
 
             // char *s = _gps.lastNMEA();
             // if (!_gps.parse(s)) {   // this also sets the newNMEAreceived() flag to false
