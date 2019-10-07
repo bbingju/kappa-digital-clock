@@ -97,7 +97,7 @@ public:
 
 private:
     Adafruit_GPS _gps;
-    unsigned long _interval = 200;
+    unsigned long _interval = 100;
     enum MODE _mode = SHORT_TERM;
     uint32_t _count_for_mode = 0;
 
@@ -106,7 +106,7 @@ private:
     unsigned long run() {
 
         if (_mode == LONG_TERM) {
-            if ((++_count_for_mode) > 10 * 60 * 60) {
+            if ((++_count_for_mode) > 10 * 60 * 30) {
                 _mode = SHORT_TERM;
                 Serial.println("\nGPS: change to SHORT_TERM");
             } else {
