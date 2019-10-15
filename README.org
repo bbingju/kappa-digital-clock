@@ -1,4 +1,9 @@
 #+TITLE: Kappa Digital Clock
+#+OPTIONS: toc: nil
+
+#+CAPTION: PCB
+#+NAME: fig:KDC-01
+[[./doc/kappa-digital-clock-pcb.jpg]]
 
 * 요구사항
 
@@ -10,14 +15,11 @@
 
 * Hardware
 
-** MCU - ATmega64A
-   - [[http://ww1.microchip.com/downloads/en/DeviceDoc/atmel-8160-8-bit-avr-microcontroller-atmega64a-datasheet.pdf][datasheet]]
+** MCU - ATmega64A ([[http://ww1.microchip.com/downloads/en/DeviceDoc/atmel-8160-8-bit-avr-microcontroller-atmega64a-datasheet.pdf][datasheet]])
 
-** RTC - [[https://www.nxp.com/products/peripherals-and-logic/signal-chain/real-time-clocks/rtcs-with-temperature-compensation/accurate-rtc-with-integrated-quartz-crystal-for-industrial-applications:PCF2129][PCF2129]]
-   - [[https://www.nxp.com/docs/en/data-sheet/PCF2129.pdf][datasheet]]
+** RTC - [[https://www.nxp.com/products/peripherals-and-logic/signal-chain/real-time-clocks/rtcs-with-temperature-compensation/accurate-rtc-with-integrated-quartz-crystal-for-industrial-applications:PCF2129][PCF2129]] ([[https://www.nxp.com/docs/en/data-sheet/PCF2129.pdf][datasheet]])
 
-** RAM Mapping 16*8 LED Controller Driver - HT16K33
-   - [[https://cdn-shop.adafruit.com/datasheets/ht16K33v110.pdf][datasheet]]
+** RAM Mapping 16*8 LED Controller Driver - HT16K33 ([[https://cdn-shop.adafruit.com/datasheets/ht16K33v110.pdf][datasheet]])
 
 ** GPS
 
