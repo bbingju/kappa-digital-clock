@@ -26,6 +26,36 @@
 
 * Software
 
+  현재까지 Ubuntu 18.04 (bionic) 과 MacOS 에서 빌드해보았다.
+  기본적인 빌드 환경은 환경마다 아래와 설치한다.
+
+** On Ubuntu
+   #+BEGIN_SRC sh
+     # Install avr toolchain & arduino-mk.
+     sudo apt install arduino-mk
+   #+END_SRC
+
+** On MacOS
+   #+BEGIN_SRC sh
+     # Install avr toolchain & arduino-mk.
+     brew tap sudar/arduino-mk
+     brew install arduino-mk
+   #+END_SRC
+
+** Build
+   빌드할 소스 준비는 아래와 같이 한다.
+
+   #+BEGIN_SRC sh
+     # Clone with Arduino Core
+     git clone https://github.com/MCUdude/MegaCore.git
+     # Clone with this repo
+     git clone https://github.com/bbingju/kappa-digital-clock.git
+     # Update submodules in this repo
+     git submodule update --init --recursive
+   #+END_SRC
+
+   빌드와 펌웨어 업로드 =Makefile= 을 적당히 수정하고, ~make~, ~make upload~ 를 명령한다.
+
 ** Arduino Core
 *** [[https://github.com/MCUdude/MegaCore][MCUdude/MegaCore]]
 
