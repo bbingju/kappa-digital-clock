@@ -1,12 +1,6 @@
 #ifndef GPS_H
 #define GPS_H
 
-#if (ARDUINO >= 100)
-  #include <Arduino.h>
-#else
-  #include <WProgram.h>
-#endif
-
 #include <VariableTimedAction.h>
 #include <Adafruit_GPS.h>
 
@@ -27,18 +21,18 @@ public:
         _callback = callback;
 
         _gps.begin(9600);
-//        _gps.sendCommand(PMTK_SET_BAUD_9600);
+        // _gps.sendCommand(PMTK_SET_BAUD_9600);
         //These lines configure the GPS Module
         _gps.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);
         //_gps.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
         // _gps.sendCommand(PMTK_SET_NMEA_OUTPUT_ALLDATA);
         _gps.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
         // _gps.sendCommand(PMTK_API_SET_FIX_CTL_100_MILLIHERTZ);
-        _gps.sendCommand(PGCMD_NOANTENNA);
+        //_gps.sendCommand(PGCMD_NOANTENNA);
         // Request updates on antenna status, comment out to keep quiet
-        //_gps.sendCommand(PGCMD_ANTENNA);
+        _gps.sendCommand(PGCMD_ANTENNA);
 
-        //delay(1000);
+        delay(800);
 
         // Ask for firmware version
         _gps.sendCommand(PMTK_Q_RELEASE);
@@ -48,8 +42,26 @@ public:
         _interval = interval;
     }
 
+    void transitToLongTerm() {
+        Serial.println("GPS: transit to LONG_TERM");
+        _mode = LONG_TERM;
+        _count_for_mode = 0;
+    }
+
+    void transitToMiddleTerm() {
+        Serial.println("GPS: transit to MIDDLE_TERM");
+        _mode = LONG_TERM;
+        _count_for_mode = 4 * 60 * 20;
+    }
+
     void start() {
+        _gps.pause(false);
         VariableTimedAction::start(_interval, false);
+    }
+
+    void stop() {
+        VariableTimedAction::stop();
+        _gps.pause(true);
     }
 
     Adafruit_GPS *getGPS() {
@@ -97,7 +109,7 @@ public:
 
 private:
     Adafruit_GPS _gps;
-    unsigned long _interval = 100;
+    unsigned long _interval = 250;
     enum MODE _mode = SHORT_TERM;
     uint32_t _count_for_mode = 0;
 
@@ -106,31 +118,28 @@ private:
     unsigned long run() {
 
         if (_mode == LONG_TERM) {
-            if ((++_count_for_mode) > 10 * 60 * 30) {
+            if ((++_count_for_mode) > 4 * 60 * 30) {
                 _mode = SHORT_TERM;
                 Serial.println("\nGPS: change to SHORT_TERM");
             } else {
+                // Serial.println("\n==> during LONG_TERM");
                 return 0;
             }
         }
 
-        while (GPSSerial.available()) {
-            _gps.read();
-            // Serial.write(_gps.read());
-        }
-
-        if (_gps.newNMEAreceived()) {
+        if (_gps.waitForSentence("$GPRMC", 1, false)) {
 
             bool ret = _gps.parse(_gps.lastNMEA());
-            if (_callback)
-                _callback(this, ret);
+            if (ret && _gps.fix) {
 
-            if (ret) {
-                if (_mode == SHORT_TERM) {
-                    Serial.println("GPS: change to LONG_TERM");
-                    _mode = LONG_TERM;
-                    _count_for_mode = 0;
+                if (_gps.hour == 0 && _gps.minute == 0) {
+                    // printParsed();
+                    return 0;
                 }
+
+                if (_callback)
+                    _callback(this, ret);
+
                 printParsed();
             }
         }

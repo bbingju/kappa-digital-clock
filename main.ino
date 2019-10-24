@@ -219,12 +219,15 @@ static uint8_t setting_com_sequence[] = {
 static uint8_t *current_setting_com = &setting_com_sequence[0];
 #define SETTING_COM_POSITION_INIT()   (current_setting_com = &setting_com_sequence[0])
 
-// Restarts program from beginning but does not reset the peripherals and registers
+// Restarts this program from beginning but does not reset the
+// peripherals and registers
 void reset()
 {
     state = RESET_STATE;
     matrix.turnOffAll();
     cds.setBrightness(2);
+    gps.stop();
+    gps.start();
 
     delay(500);
     asm volatile ("  jmp 0");
@@ -308,6 +311,7 @@ static void onButtonSelect(void *arg, Button::EVENT e)
             if (*(++current_setting_com) == 0xFF) {
                 SETTING_COM_POSITION_INIT();
                 datetime.saveSettingTime();
+                gps.transitToMiddleTerm();
                 gps.start();
                 datetime.changeToNormalMode();
                 nointeraction.stop();
@@ -409,10 +413,9 @@ static void onNotifyGPS(void *arg, bool ret)
 
     if (ret) {
         /* Sync with RTC */
-        datetime.setCurrent(obj->getGPS());
+        time_synced_between_gps_n_rtc = datetime.setCurrent(obj->getGPS());
+        obj->transitToLongTerm();
     }
-
-    time_synced_between_gps_n_rtc = ret;
 }
 
 void setup()
