@@ -1,3 +1,6 @@
+[submodule "core/MegaCore"]
+	path = core/MegaCore
+	url = https://github.com/MCUdude/MegaCore.git
 [submodule "lib/VariableTimedAction"]
 	path = lib/VariableTimedAction
 	url = https://github.com/amirchev/VariableTimedAction.git
