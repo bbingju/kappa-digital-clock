@@ -224,6 +224,7 @@ void reset()
 {
     state = RESET_STATE;
     matrix.turnOffAll();
+    cds.setBrightness(2);
 
     delay(500);
     asm volatile ("  jmp 0");

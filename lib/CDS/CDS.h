@@ -11,11 +11,14 @@
 
 class CDS: public VariableTimedAction {
 public:
-    CDS(): _pin(A0), _brightness(0) { }
+    CDS(): _pin(A0), _brightness(2) { }
     ~CDS() {}
 
     int getBrightness() {
         return _brightness;
+    }
+    void setBrightness(int brightness) {
+        _brightness = brightness;
     }
 
 private:
@@ -37,8 +40,10 @@ private:
                 _brightness = 2;
             else if (avg > 400 && avg < 900)
                 _brightness = 1;
-            else if (avg > 900)
+            else if (avg > 900 && avg < 1020)
                 _brightness = 0;
+            else if (avg >= 1020 && avg < 1024)
+                _brightness = 2;
 
             count = 0;
             total = 0;
