@@ -54,7 +54,7 @@ public:
         }
     }
 
-    void setCurrent(Adafruit_GPS *obj) {
+    bool setCurrent(Adafruit_GPS *obj) {
         float s = obj->seconds + obj->milliseconds/1000.f + obj->secondsSinceTime();
         int m = obj->minute;
         int h = obj->hour;
@@ -97,7 +97,13 @@ public:
         _setting_time.min  = new_time->tm_min;
         _setting_time.sec  = new_time->tm_sec;
 
-        setCurrent(&_setting_time);
+        if (memcmp(&_real_time, &_setting_time, sizeof(Rtc::DateTime))) {
+            Serial.println("Change time from GPS.");
+            setCurrent(&_setting_time);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     void changeToNormalMode() {
@@ -109,6 +115,7 @@ public:
         _setting_time = _real_time;
         _current = &_setting_time;
         _setting_time_modified = false;
+        _setting_sec_reset = false;
         _mode = SETTING_MODE;
     }
 
@@ -143,6 +150,7 @@ public:
             _setting_time.year = y = (y >= 50) ? 0 : y + 1;
             _setting_time.wday = getDayOfWeek(y, _setting_time.mon, _setting_time.day);
             getLunarDate(getTotalDaySolar(y, _setting_time.mon, _setting_time.day), _lunardate);
+            _setting_time_modified = true;
         }
     }
 
@@ -155,6 +163,7 @@ public:
                 _setting_time.day = d;
             _setting_time.wday = getDayOfWeek(_setting_time.year, m, _setting_time.day);
             getLunarDate(getTotalDaySolar(_setting_time.year, m, _setting_time.day), _lunardate);
+            _setting_time_modified = true;
         }
     }
 
@@ -164,6 +173,7 @@ public:
             _setting_time.day = d = (d >= getLastDayOfMonth(_setting_time.year, _setting_time.mon)) ? 1 : d + 1;
             _setting_time.wday = getDayOfWeek(_setting_time.year, _setting_time.mon, d);
             getLunarDate(getTotalDaySolar(_setting_time.year, _setting_time.mon, d), _lunardate);
+            _setting_time_modified = true;
         }
     }
 
@@ -171,6 +181,7 @@ public:
         if (isSettingMode()) {
             uint8_t h = _setting_time.hour;
             _setting_time.hour = h = (h >= 23) ? 0 : h + 1;
+            _setting_time_modified = true;
         }
     }
 
@@ -178,10 +189,10 @@ public:
         if (isSettingMode()) {
             uint8_t m = _setting_time.min;
             _setting_time.min = m = (m >=59) ? 0 : m + 1;
-
-            // This is scenario.
             _setting_time_modified = true;
+            // This is scenario.
             _setting_time.sec = 0;
+            _setting_sec_reset = true;
         }
     }
 
@@ -191,6 +202,7 @@ public:
             _setting_time.year = y = (y == 0) ? 50 : y - 1;
             _setting_time.wday = getDayOfWeek(y, _setting_time.mon, _setting_time.day);
             getLunarDate(getTotalDaySolar(y, _setting_time.mon, _setting_time.day), _lunardate);
+            _setting_time_modified = true;
         }
     }
 
@@ -203,6 +215,7 @@ public:
                 _setting_time.day = d;
             _setting_time.wday = getDayOfWeek(_setting_time.year, m, _setting_time.day);
             getLunarDate(getTotalDaySolar(_setting_time.year, m, _setting_time.day), _lunardate);
+            _setting_time_modified = true;
         }
     }
 
@@ -212,6 +225,7 @@ public:
             _setting_time.day = d = (d == 1) ? getLastDayOfMonth(_setting_time.year, _setting_time.mon) : d - 1;
             _setting_time.wday = getDayOfWeek(_setting_time.year, _setting_time.mon, d);
             getLunarDate(getTotalDaySolar(_setting_time.year, _setting_time.mon, d), _lunardate);
+            _setting_time_modified = true;
         }
     }
 
@@ -219,6 +233,7 @@ public:
         if (isSettingMode()) {
             uint8_t h = _setting_time.hour;
             _setting_time.hour = (h == 0) ? 23 : h - 1;
+            _setting_time_modified = true;
         }
     }
 
@@ -226,9 +241,10 @@ public:
         if (isSettingMode()) {
             uint8_t m = _setting_time.min;
             _setting_time.min = (m == 0) ? 59 : m - 1;
-            // This is scenario.
             _setting_time_modified = true;
+            // This is scenario.
             _setting_time.sec = 0;
+            _setting_sec_reset = true;
         }
     }
 
@@ -240,6 +256,7 @@ private:
     uint8_t _lunardate[3];
     void (*_notify)(void *);
     bool _setting_time_modified = false;
+    bool _setting_sec_reset = false;
 
     enum MODE {
         NORMAL_MODE,
@@ -254,7 +271,7 @@ private:
             Rtc::DateTime time = _rtc.dateTime();
             if (memcmp(&time, _current, sizeof(Rtc::DateTime))) {
                 *_current = time;
-                if (_current->mon == 0 && _current->day == 0) {
+                if (_current->mon == 0 || _current->day == 0) {
                     _current->year = 10;
                     _current->mon  = 1;
                     _current->day  = 1;
@@ -265,7 +282,7 @@ private:
             }
         }
         else if (_mode == SETTING_MODE) {
-            if (!_setting_time_modified) {
+            if (!_setting_sec_reset) {
                 Rtc::DateTime time = _rtc.dateTime();
                 bool changed = false;
                 if (time.sec != _current->sec) {
