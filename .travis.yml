@@ -1,12 +1,12 @@
 language: c++
 
-# dist: bionic
+os:
+  -linux
+
+dist: bionic
 
 # compiler:
 #   - gcc
-
-# os:
-#   - linux
 
 before_install:
   - sudo apt-get update
