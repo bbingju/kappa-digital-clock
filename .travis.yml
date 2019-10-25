@@ -8,8 +8,8 @@ language: c++
 # os:
 #   - linux
 
-# before_install:
-#   - sudo apt-get update
-#   - sudo apt-get -y install arduino-mk
+before_install:
+  - sudo apt-get update
+  - sudo apt-get -y install arduino-mk
 
 script: make
