@@ -1,15 +1,15 @@
 language: c++
 
-dist: bionic
+# dist: bionic
 
-compiler:
-	- gcc
+# compiler:
+#   - gcc
 
-os:
-	- linux
+# os:
+#   - linux
 
-before_install:
-	- sudo apt-get update
-	- sudo apt-get -y install arduino-mk
+# before_install:
+#   - sudo apt-get update
+#   - sudo apt-get -y install arduino-mk
 
 script: make
