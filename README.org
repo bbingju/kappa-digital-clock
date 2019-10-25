@@ -1,6 +1,8 @@
 #+TITLE: Kappa Digital Clock
 #+OPTIONS: toc: nil
 
+[[https://travis-ci.com/bbingju/kappa-digital-clock.svg?branch=master]]
+
 #+CAPTION: PCB
 #+NAME: fig:KDC-01
 [[./doc/kappa-digital-clock-pcb.jpg]]
@@ -46,11 +48,7 @@
    빌드할 소스 준비는 아래와 같이 한다.
 
    #+BEGIN_SRC sh
-     # Clone with Arduino Core
-     git clone https://github.com/MCUdude/MegaCore.git
-     # Clone with this repo
      git clone https://github.com/bbingju/kappa-digital-clock.git
-     # Update submodules in this repo
      git submodule update --init --recursive
    #+END_SRC
 
