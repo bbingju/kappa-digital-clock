@@ -1,13 +1,9 @@
-// Rtc.h
+/* -*- mode: arduino; fill-column: 75; comment-column: 50 -*- */
 
 #ifndef _RTC_h
 #define _RTC_h
 
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include <Arduino.h>
-#else
-	#include "WProgram.h"
-#endif
+#include <Arduino.h>
 #include <Wire.h>
 
 namespace EmbeddedDevices

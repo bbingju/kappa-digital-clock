@@ -1,3 +1,5 @@
+/* -*- mode: arduino; fill-column: 75; comment-column: 50 -*- */
+
 #ifndef GPS_H
 #define GPS_H
 

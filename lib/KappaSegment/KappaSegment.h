@@ -1,13 +1,9 @@
+/* -*- mode: arduino; fill-column: 75; comment-column: 50 -*- */
+
 #ifndef KAPPASEGMENT_H
 #define KAPPASEGMENT_H
 
-  // include appropriate version of Arduino code
-#if (ARDUINO >= 100)
-  #include "Arduino.h"
-#else
-  #include "WProgram.h"
-#endif
-
+#include <Arduino.h>
 #include "HT16K33.h"
 
 class KappaSegment: public HT16K33 {
@@ -35,7 +31,7 @@ public:
     void setup() {
         init(I2C_ADDR);
     }
-  
+
     void setBrightness(int level) {
         level = level & 0x3;
         if (brightness != level) {

@@ -1,3 +1,5 @@
+/* -*- mode: arduino; fill-column: 75; comment-column: 50 -*- */
+
 #include "CDS.h"
 #include "DHT.h"
 #include "KappaGPS.h"

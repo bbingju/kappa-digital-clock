@@ -1,11 +1,7 @@
+/* -*- mode: arduino; fill-column: 75; comment-column: 50 -*- */
+
 #ifndef KAPPADATETIME_H
 #define KAPPADATETIME_H
-
-#if (ARDUINO >= 100)
-  #include <Arduino.h>
-#else
-  #include <WProgram.h>
-#endif
 
 #include <VariableTimedAction.h>
 #include <Rtc.h>
