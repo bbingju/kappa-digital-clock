@@ -6,11 +6,4 @@ addons:
   apt:
     packages: arduino-mk
 
-# compiler:
-#   - gcc
-
-# before_install:
-#   - sudo apt-get update
-#   - sudo apt-get -y install arduino-mk
-
 script: make
