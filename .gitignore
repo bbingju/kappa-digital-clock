@@ -2,6 +2,10 @@ build/
 *~
 .ccls-cache/
 
+GPATH
+GRTAGS
+GTAGS
+
 ### C++ ###
 # Prerequisites
 *.d
