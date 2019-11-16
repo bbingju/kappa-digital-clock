@@ -1,4 +1,4 @@
-/* -*- mode: arduino; fill-column: 75; comment-column: 50 -*- */
+/* -*- mode: c++; -*- */
 
 #include "CDS.h"
 #include "DHT.h"

@@ -1,4 +1,4 @@
-/* -*- mode: arduino; fill-column: 75; comment-column: 50 -*- */
+/* -*- mode: c++ -*- */
 
 #ifndef DHT_H
 #define DHT_H

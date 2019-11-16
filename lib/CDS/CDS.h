@@ -1,5 +1,3 @@
-/* -*- mode: arduino; fill-column: 75; comment-column: 50 -*- */
-
 #ifndef CDS_H
 #define CDS_H
 
