@@ -1,5 +1,9 @@
 #+TITLE: Kappa Digital Clock
 #+OPTIONS: toc: nil
+#+AUTHOR: Phil Hwang
+#+EMAIL: pjhwang@gmail.com
+#+LANGUAGE: ko
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/setup/theme-readtheorg.setup
 
 [[https://travis-ci.com/bbingju/kappa-digital-clock.svg?branch=master]]
 
@@ -49,6 +53,7 @@
 
    #+BEGIN_SRC sh
      git clone https://github.com/bbingju/kappa-digital-clock.git
+     cd kappa-digital-clock
      git submodule update --init --recursive
    #+END_SRC
 
