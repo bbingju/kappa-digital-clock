@@ -1,5 +1,5 @@
 #+TITLE: Kappa Digital Clock
-#+OPTIONS: toc: nil
+#+OPTIONS: toc:t title:t email:t d:t ^:nil
 #+AUTHOR: Phil Hwang
 #+EMAIL: pjhwang@gmail.com
 #+LANGUAGE: ko
