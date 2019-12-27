@@ -101,11 +101,14 @@ const uint8_t NUM_TO_SEG[] = {
 
 void LED_COM_ON(uint8_t com_number)
 {
+    //digitalWrite(34, HIGH);
     digitalWrite(COMS_ARDUINO[com_number], HIGH);
 };
 
 void LED_COM_OFF(uint8_t com_number)
 {
+    if (com_number == 0)
+        digitalWrite(34, LOW);
     digitalWrite(COMS_ARDUINO[com_number], LOW);
 }
 
@@ -126,6 +129,7 @@ void LED_SEG_SET_VALUE(uint8_t value1, uint8_t value2)
     uint8_t v1 = NUM_TO_SEG[value1];
     uint8_t v2 = NUM_TO_SEG[value2];
 
+    digitalWrite(34, HIGH);
     for (int i = 0; i < 7; i++)	{
         digitalWrite(SEGS_ARDUINO[i], (v1 & (1 << i)) ? HIGH : LOW);
         digitalWrite(SEGS_ARDUINO[i + 8], (v2 & (1 << i)) ? HIGH : LOW);
@@ -134,6 +138,7 @@ void LED_SEG_SET_VALUE(uint8_t value1, uint8_t value2)
 
 void LED_SET_NULL()
 {
+    digitalWrite(34, LOW);
     for (int i = 0; i < 7; i++) {
         digitalWrite(SEGS_ARDUINO[i], LOW);
         digitalWrite(SEGS_ARDUINO[i + 8], LOW);
@@ -165,7 +170,10 @@ void LED_DISPLAY_VALUE(uint8_t decimal_val, uint8_t com_number)
             digitalWrite(SEGS_ARDUINO[i], LOW);
         }
         else {
-            digitalWrite(SEGS_ARDUINO[i], HIGH);
+            if (com_number == 0)
+                digitalWrite(34, HIGH);
+            else
+                digitalWrite(SEGS_ARDUINO[i], HIGH);
         }
 
     }
@@ -427,6 +435,7 @@ void setup()
     matrix.setup();
 
     // SETUP GPIO
+    pinMode(34, OUTPUT); // Decimal place of COM1
     for (int i = 0; i < 3; i++) {
         pinMode(COMS_ARDUINO[i], OUTPUT);
     }
