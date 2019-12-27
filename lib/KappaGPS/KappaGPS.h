@@ -1,7 +1,7 @@
 /* -*- mode: arduino; fill-column: 75; comment-column: 50 -*- */
 
-#ifndef GPS_H
-#define GPS_H
+#ifndef KAPPA_GPS_H
+#define KAPPA_GPS_H
 
 #include <VariableTimedAction.h>
 #include <Adafruit_GPS.h>
@@ -58,6 +58,18 @@ public:
 
     void start() {
         _gps.pause(false);
+
+        // Check the module attached
+        /* Serial.println("start checking whether the gps is attached"); */
+        for (int i = 0; i < 1000; i++) {
+            char c = _gps.read ();
+            /* Serial.print (c); */
+            if (_gps.newNMEAreceived())
+                _module_attached = true;
+        }
+        /* Serial.print("module is attached:"); */
+        Serial.println(_module_attached);
+
         VariableTimedAction::start(_interval, false);
     }
 
@@ -114,39 +126,43 @@ private:
     unsigned long _interval = 250;
     enum MODE _mode = SHORT_TERM;
     uint32_t _count_for_mode = 0;
+    boolean _module_attached = false;
 
     void (*_callback)(void *arg, bool ret) = 0;
 
     unsigned long run() {
 
-        if (_mode == LONG_TERM) {
-            if ((++_count_for_mode) > 4 * 60 * 30) {
-                _mode = SHORT_TERM;
-                Serial.println("\nGPS: change to SHORT_TERM");
-            } else {
-                // Serial.println("\n==> during LONG_TERM");
-                return 0;
-            }
-        }
+        if (_module_attached) {
 
-        if (_gps.waitForSentence("$GPRMC", 1, false)) {
-
-            bool ret = _gps.parse(_gps.lastNMEA());
-            if (ret && _gps.fix) {
-
-                if (_gps.hour == 0 && _gps.minute == 0) {
-                    // printParsed();
+            if (_mode == LONG_TERM) {
+                if ((++_count_for_mode) > 4 * 60 * 30) {
+                    _mode = SHORT_TERM;
+                    Serial.println("\nGPS: change to SHORT_TERM");
+                } else {
+                    // Serial.println("\n==> during LONG_TERM");
                     return 0;
                 }
+            }
 
-                if (_callback)
-                    _callback(this, ret);
+            if (_gps.waitForSentence("$GPRMC", 1, false)) {
 
-                printParsed();
+                bool ret = _gps.parse(_gps.lastNMEA());
+                if (ret && _gps.fix) {
+
+                    if (_gps.hour == 0 && _gps.minute == 0) {
+                        // printParsed();
+                        return 0;
+                    }
+
+                    if (_callback)
+                        _callback(this, ret);
+
+                    printParsed();
+                }
             }
         }
         return 0;
     }
 };
 
-#endif /* GPS_H */
+#endif /* KAPPA_GPS_H */
